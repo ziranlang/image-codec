@@ -29,9 +29,34 @@ ExactImageCapacity :: () -> bool {
     short := AllocateImage(metadata, limits, null)
     return !short.is_ok && short.error.code == LimitExceeded && short.image.pixels.capacity == 0
 }
+// Planar/YUV callers budget their own bytes; ValidateDimensions keeps RGBA8.
+PixelDimensions :: () -> s32 {
+    raw := DefaultLimits(); raw.max_output_bytes = 1
+    if ValidatePixelDimensions(1, 1, raw).code != DecodeOK || ValidateDimensions(1, 1, raw).code != LimitExceeded { return 36 }
+    raw.max_output_bytes = 35
+    if ValidatePixelDimensions(7, 5, raw).code != DecodeOK || ValidateDimensions(7, 5, raw).code != LimitExceeded { return 37 }
+    raw.max_output_bytes = 140
+    if ValidateDimensions(7, 5, raw).code != DecodeOK { return 38 }
+    raw.max_output_bytes = 139
+    if ValidateDimensions(7, 5, raw).code != LimitExceeded { return 39 }
+    exact := DefaultLimits(); exact.max_width = 7; exact.max_height = 5; exact.max_pixels = 35
+    if ValidatePixelDimensions(7, 5, exact).code != DecodeOK || ValidatePixelDimensions(8, 5, exact).code != LimitExceeded ||
+       ValidatePixelDimensions(7, 6, exact).code != LimitExceeded { return 40 }
+    exact.max_pixels = 34
+    if ValidatePixelDimensions(7, 5, exact).code != LimitExceeded { return 41 }
+    wide := DefaultLimits(); wide.max_width = 2147483647; wide.max_height = 2147483647
+    wide.max_pixels = 4611686014132420609 // (2^31 - 1)^2, beyond s32
+    if ValidatePixelDimensions(2147483647, 2147483647, wide).code != DecodeOK { return 42 }
+    wide.max_pixels = 4611686014132420608
+    if ValidatePixelDimensions(2147483647, 2147483647, wide).code != LimitExceeded { return 43 }
+    if ValidatePixelDimensions(0, 1, raw).code != InvalidInput || ValidatePixelDimensions(1, -1, raw).code != InvalidInput { return 44 }
+    return 0
+}
 #program_export
 SelfTest :: () -> s32 {
     if !ExactImageCapacity() { return 35 }
+    pixel := PixelDimensions()
+    if pixel != 0 { return pixel }
     limits := DefaultLimits()
     if ValidateLimits(limits).code != DecodeOK { return 1 }
     for field: 0..9 {
@@ -46,7 +71,8 @@ SelfTest :: () -> s32 {
         if field == 7 { invalid.max_frames = 0 }
         if field == 8 { invalid.max_workers = 0 }
         if field == 9 { invalid.max_decoded_frames = 0 }
-        if ValidateLimits(invalid).code != InvalidLimits { return 2 }
+        if ValidateLimits(invalid).code != InvalidLimits || ValidatePixelDimensions(1, 1, invalid).code != InvalidLimits ||
+           ValidateDimensions(1, 1, invalid).code != InvalidLimits { return 2 }
     }
     if ValidateInputSize(0, limits).code != InvalidInput || ValidateInputSize(limits.max_input_bytes + 1, limits).code != LimitExceeded { return 3 }
     if ValidateDimensions(-1, 2, limits).code != InvalidInput || ValidateDimensions(32769, 1, limits).code != LimitExceeded ||

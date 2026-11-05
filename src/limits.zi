@@ -37,13 +37,21 @@ RequiredSpan :: (width: s32, height: s32, sample_bytes: s32, stride: s64) -> (by
     if height > 1 && stride > (9223372036854775807 - row) / (height - 1) { return 0, Error(LimitExceeded) }
     return stride * (height - 1) + row, Error(DecodeOK)
 }
-ValidateDimensions :: (width: s32, height: s32, limits: DecodeLimits) -> DecodeError {
+// Storage-neutral: planar/YUV engines apply their own output byte budget.
+// Positive s32 sides widen to s64, so the pixel product cannot overflow.
+ValidatePixelDimensions :: (width: s32, height: s32, limits: DecodeLimits) -> DecodeError {
     error := ValidateLimits(limits)
     if error.code != DecodeOK { return error }
     if width <= 0 || height <= 0 { return Error(InvalidInput) }
     if width > limits.max_width || height > limits.max_height { return Error(LimitExceeded) }
-    pixels := cast(s64)width * height
-    if pixels > limits.max_pixels || pixels > limits.max_output_bytes / 4 { return Error(LimitExceeded) }
+    if cast(s64)width * height > limits.max_pixels { return Error(LimitExceeded) }
+    return Error(DecodeOK)
+}
+// Tight RGBA8 output: four bytes per pixel must fit max_output_bytes.
+ValidateDimensions :: (width: s32, height: s32, limits: DecodeLimits) -> DecodeError {
+    error := ValidatePixelDimensions(width, height, limits)
+    if error.code != DecodeOK { return error }
+    if cast(s64)width * height > limits.max_output_bytes / 4 { return Error(LimitExceeded) }
     return Error(DecodeOK)
 }
 ValidateInputSize :: (count: s64, limits: DecodeLimits) -> DecodeError {

@@ -46,6 +46,11 @@ one decoded frame and one worker. Caps are positive except
 `max_metadata_bytes`, which may be zero. Zero never means unlimited.
 `ValidateLimits`, `ValidateInputSize`, `ValidateDimensions`, `ValidateMetadata`
 and `ValidateDecodedFrames` return structured errors.
+`ValidatePixelDimensions(width,height,limits)` checks the limits, positive
+dimensions, `max_width`/`max_height` and `max_pixels` with a widened s64
+product. It assumes no sample storage, so planar or YUV engines apply their own
+output byte budget. `ValidateDimensions` calls it, then requires tight RGBA8
+`width*height*4 <= max_output_bytes`.
 `RequiredSpan(width,height,sample_bytes,stride)` checks multiplication overflow.
 Scratch, metadata, input and output are separate budgets, not a process RSS
 guarantee. Providers reserve engine scratch and enforce container/metadata caps

@@ -10,5 +10,7 @@ main :: () -> s32 {
     input: [4]u8 = .[12, 34, 56, 255]
     result := DecodeRGBA8(BorrowBytes(input[:]), metadata, *options)
     if !result.is_ok || !ImageValid(*result.image) || result.image.pixels[2] != 56 { return 1 }
+    raw := options.limits; raw.max_output_bytes = 35
+    if ValidatePixelDimensions(7, 5, raw).code != DecodeOK || ValidateDimensions(7, 5, raw).code != LimitExceeded { return 2 }
     return 0
 }
