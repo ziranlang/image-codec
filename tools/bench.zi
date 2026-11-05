@@ -1,0 +1,50 @@
+#import "image_codec/benchmark"
+#import "std/byte_text_linux"
+#import "std/number_text"
+#import "std/stdio_linux"
+#import "std/file"
+
+// Add ordinary .zi providers here as codecs become available. The foundation
+// deliberately has no implicit AVIF/WebP/native-codec import.
+#program_export
+main :: (argc: s32, argv: **u8) -> s32 {
+    input: string; expected_path: string; report: string; version: string
+    provider := "rgba8"; mode := "warm"
+    width: s32; height: s32; iterations: s32 = 7
+    at: s32 = 1
+    while at < argc {
+        key := TextFromCString(argv[at]); at += 1
+        if at >= argc { unused PrintError("missing option value\n"); return 2 }
+        value := TextFromCString(argv[at]); at += 1
+        if key == "--input" { input = value }
+        else if key == "--expected" { expected_path = value }
+        else if key == "--report" { report = value }
+        else if key == "--toolchain-version" { version = value }
+        else if key == "--provider" { provider = value }
+        else if key == "--mode" { mode = value }
+        else if key == "--width" || key == "--height" || key == "--iterations" {
+            number, used := IntegerPrefix(value)
+            if used != value.count || used == 0 || number <= 0 || number > 2147483647 { unused PrintError("invalid positive integer\n"); return 2 }
+            if key == "--width" { width = cast(s32)number }
+            if key == "--height" { height = cast(s32)number }
+            if key == "--iterations" { iterations = cast(s32)number }
+        } else { unused PrintError("unknown option\n"); return 2 }
+    }
+    if input.count == 0 || expected_path.count == 0 || report.count == 0 || width <= 0 || height <= 0 {
+        unused PrintError("usage: bench --input FILE --expected RGBA --width N --height N --report JSON [--iterations N] [--mode warm] [--provider rgba8]\n")
+        return 2
+    }
+    if provider != "rgba8" || mode != "warm" { unused PrintError("unsupported capability: provider or cache mode\n"); return 5 }
+    metadata: ImageMetadata
+    metadata.width = width; metadata.height = height; metadata.source_bit_depth = 8
+    metadata.has_alpha = true; metadata.frame_count = 1
+    options := DefaultOptions()
+    budget := NewWorkerBudget(options.limits); options.workers = *budget
+    golden_file := ReadBoundedFile(expected_path, options.limits.max_output_bytes, null)
+    if golden_file.error.code != DecodeOK { unused PrintError(ErrorText(golden_file.error.code)); return golden_file.error.code }
+    golden := golden_file.data
+    result := BenchmarkFile(input, VecSlice(golden, 0, golden.count), metadata, *options, DecodeRGBA8, iterations)
+    if !result.is_ok { unused PrintError(ErrorText(result.error.code)); unused PrintError("\n"); return result.error.code }
+    if !WriteEntireFile(report, BenchmarkJSON(*result, "rgba8", version)) { unused PrintError("could not write report\n"); return 11 }
+    return 0
+}

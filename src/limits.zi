@@ -1,0 +1,55 @@
+using ErrorsModule :: #import "errors"
+DecodeLimits :: struct {
+    max_input_bytes: s64
+    max_width: s32
+    max_height: s32
+    max_pixels: s64
+    max_output_bytes: s64
+    max_working_bytes: s64
+    max_metadata_bytes: s64
+    max_frames: s32 // source container frame-count cap, not frames decoded
+    max_decoded_frames: s32
+    max_workers: s32
+}
+DefaultLimits :: () -> DecodeLimits {
+    return DecodeLimits.{268435456, 32768, 32768, 67108864, 268435456, 536870912, 1048576, 4096, 1, 1}
+}
+ValidateLimits :: (limits: DecodeLimits) -> DecodeError {
+    if limits.max_input_bytes <= 0 || limits.max_width <= 0 || limits.max_height <= 0 ||
+       limits.max_pixels <= 0 || limits.max_output_bytes <= 0 || limits.max_working_bytes <= 0 ||
+       limits.max_metadata_bytes < 0 || limits.max_frames <= 0 || limits.max_decoded_frames <= 0 || limits.max_workers <= 0 {
+        return Error(InvalidLimits)
+    }
+    return Error(DecodeOK)
+}
+ValidateDecodedFrames :: (count: s32, limits: DecodeLimits) -> DecodeError {
+    error := ValidateLimits(limits)
+    if error.code != DecodeOK { return error }
+    if count <= 0 { return Error(InvalidInput) }
+    if count > limits.max_decoded_frames { return Error(LimitExceeded) }
+    return Error(DecodeOK)
+}
+// Division checks precede multiplication, including hostile strides.
+RequiredSpan :: (width: s32, height: s32, sample_bytes: s32, stride: s64) -> (bytes: s64, error: DecodeError) {
+    if width <= 0 || height <= 0 || sample_bytes <= 0 { return 0, Error(InvalidInput) }
+    row := cast(s64)width * sample_bytes
+    if stride < row { return 0, Error(InvalidInput) }
+    if height > 1 && stride > (9223372036854775807 - row) / (height - 1) { return 0, Error(LimitExceeded) }
+    return stride * (height - 1) + row, Error(DecodeOK)
+}
+ValidateDimensions :: (width: s32, height: s32, limits: DecodeLimits) -> DecodeError {
+    error := ValidateLimits(limits)
+    if error.code != DecodeOK { return error }
+    if width <= 0 || height <= 0 { return Error(InvalidInput) }
+    if width > limits.max_width || height > limits.max_height { return Error(LimitExceeded) }
+    pixels := cast(s64)width * height
+    if pixels > limits.max_pixels || pixels > limits.max_output_bytes / 4 { return Error(LimitExceeded) }
+    return Error(DecodeOK)
+}
+ValidateInputSize :: (count: s64, limits: DecodeLimits) -> DecodeError {
+    error := ValidateLimits(limits)
+    if error.code != DecodeOK { return error }
+    if count <= 0 { return Error(InvalidInput) }
+    if count > limits.max_input_bytes { return Error(LimitExceeded) }
+    return Error(DecodeOK)
+}

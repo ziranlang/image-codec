@@ -1,0 +1,14 @@
+#import "image_codec/api"
+// These exported types must retain std/image and Vec identities through the
+// real package resolver, including caller-supplied buffer and worker state.
+#program_export
+main :: () -> s32 {
+    options := DefaultOptions()
+    workers := NewWorkerBudget(options.limits); options.workers = *workers
+    metadata: ImageMetadata
+    metadata.width = 1; metadata.height = 1; metadata.source_bit_depth = 8; metadata.frame_count = 1
+    input: [4]u8 = .[12, 34, 56, 255]
+    result := DecodeRGBA8(BorrowBytes(input[:]), metadata, *options)
+    if !result.is_ok || !ImageValid(*result.image) || result.image.pixels[2] != 56 { return 1 }
+    return 0
+}

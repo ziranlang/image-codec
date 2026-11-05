@@ -1,0 +1,58 @@
+using Images :: #import "image"
+// Only RGBA8 output and strict color are defined here. Codec engines must
+// explicitly reject unsupported source features rather than ignore them.
+StrictColor :: 0;
+FastColor :: 1;
+DecodeOptions :: struct { limits: DecodeLimits; cancellation: *Cancellation; workers: *WorkerBudget; color_mode: s32; }
+DefaultOptions :: () -> DecodeOptions {
+    options: DecodeOptions
+    options.limits = DefaultLimits()
+    return options
+}
+ValidateOptions :: (options: *DecodeOptions) -> DecodeError {
+    if options == null { return Error(InvalidInput) }
+    error := ValidateLimits(options.limits)
+    if error.code != DecodeOK { return error }
+    if options.color_mode != StrictColor && options.color_mode != FastColor { return Error(UnsupportedCapability) }
+    if options.workers != null {
+        error = ValidateWorkerBudget(options.workers, options.limits)
+        if error.code != DecodeOK { return error }
+    }
+    return CancellationError(options.cancellation)
+}
+// Ordinary procedure values let clients supply a codec without a registry,
+// dynamic plugin ABI, native dependency, or process-global mutable state.
+DecodeProcedure :: #type (input: BorrowedBytes, metadata: ImageMetadata, options: *DecodeOptions) -> DecodeResult;
+
+// Useful reference provider: already decoded, tightly packed RGBA8 bytes.
+// Metadata is supplied by the caller, not guessed from an unframed file.
+DecodeRGBA8 :: (input: BorrowedBytes, metadata: ImageMetadata, options: *DecodeOptions) -> DecodeResult {
+    error := ValidateOptions(options)
+    if error.code != DecodeOK { return DecodeFailure(error) }
+    error = ValidateInputSize(input.data.count, options.limits)
+    if error.code != DecodeOK { return DecodeFailure(error) }
+    error = ValidateMetadata(metadata, options.limits)
+    if error.code != DecodeOK { return DecodeFailure(error) }
+    if options.color_mode != StrictColor || metadata.source_premultiplied || metadata.source_bit_depth != 8 { return DecodeFailure(Error(UnsupportedCapability)) }
+    bytes := cast(s64)metadata.width * metadata.height * 4
+    if input.data.count < bytes { return DecodeFailure(Error(TruncatedInput, input.data.count)) }
+    if input.data.count != bytes { return DecodeFailure(Error(MalformedInput, bytes)) }
+    if options.workers != null {
+        error = AcquireWorker(options.workers, options.cancellation)
+        if error.code != DecodeOK { return DecodeFailure(error) }
+    }
+    result := AllocateImage(metadata, options.limits, options.cancellation)
+    if result.is_ok {
+        for row: 0..metadata.height - 1 {
+            error = CancellationError(options.cancellation)
+            if error.code != DecodeOK { break }
+            for byte: 0..cast(s64)metadata.width * 4 - 1 {
+                at := cast(s64)row * metadata.width * 4 + byte
+                result.image.pixels[at] = input.data[at]
+            }
+        }
+    }
+    if options.workers != null { unused ReleaseWorker(options.workers) }
+    if error.code != DecodeOK { return DecodeFailure(error) }
+    return result
+}

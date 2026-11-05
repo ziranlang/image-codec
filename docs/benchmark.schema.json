@@ -1,0 +1,195 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "image-codec benchmark report schema 1",
+  "type": "object",
+  "required": [
+    "active_workers",
+    "allocations",
+    "cache_policy",
+    "correctness_verified",
+    "cpu_capabilities",
+    "cpu_ns_per_pixel",
+    "energy_joules",
+    "input_bytes",
+    "iterations",
+    "mode",
+    "output_bytes",
+    "output_hash",
+    "output_hash_algorithm",
+    "p50_ns",
+    "p95_ns",
+    "peak_rss_bytes",
+    "pixels",
+    "pixels_per_second",
+    "provider",
+    "samples_ns",
+    "schema_version",
+    "timing_scope",
+    "tool_versions",
+    "total_ns",
+    "unavailable"
+  ],
+  "properties": {
+    "active_workers": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "allocations": {
+      "type": "null"
+    },
+    "cache_policy": {
+      "type": "string",
+      "minLength": 1
+    },
+    "correctness_verified": {
+      "const": true
+    },
+    "cpu_capabilities": {
+      "type": "null"
+    },
+    "cpu_ns_per_pixel": {
+      "type": "null"
+    },
+    "energy_joules": {
+      "type": "null"
+    },
+    "input_bytes": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "iterations": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1024
+    },
+    "mode": {
+      "type": "string",
+      "minLength": 1,
+      "const": "warm"
+    },
+    "output_bytes": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "output_hash": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[0-9a-f]{16}$"
+    },
+    "output_hash_algorithm": {
+      "type": "string",
+      "minLength": 1,
+      "const": "fnv1a64"
+    },
+    "p50_ns": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "p95_ns": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "peak_rss_bytes": {
+      "type": "null"
+    },
+    "pixels": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "pixels_per_second": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "provider": {
+      "type": "string",
+      "minLength": 1
+    },
+    "samples_ns": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1024,
+      "items": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "schema_version": {
+      "type": "integer",
+      "minimum": 0,
+      "const": 1
+    },
+    "timing_scope": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tool_versions": {
+      "type": "object",
+      "required": [
+        "runner",
+        "ziran"
+      ],
+      "properties": {
+        "runner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ziran": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "codec": {
+          "type": ["string", "null"],
+          "minLength": 1
+        },
+        "codec_revision": {
+          "type": ["string", "null"],
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "total_ns": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "unavailable": {
+      "type": "object",
+      "required": [
+        "allocations",
+        "cpu_capabilities",
+        "cpu_ns_per_pixel",
+        "energy_joules",
+        "peak_rss_bytes"
+      ],
+      "properties": {
+        "allocations": {
+          "type": "string",
+          "minLength": 1
+        },
+        "cpu_capabilities": {
+          "type": "string",
+          "minLength": 1
+        },
+        "cpu_ns_per_pixel": {
+          "type": "string",
+          "minLength": 1
+        },
+        "energy_joules": {
+          "type": "string",
+          "minLength": 1
+        },
+        "peak_rss_bytes": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,24 @@
+using LimitsModule :: #import "limits"
+// Output dimensions after transforms. Zero source values mean unknown.
+// Image output is always packed straight-alpha RGBA8 in top-to-bottom rows.
+ImageMetadata :: struct {
+    width: s32
+    height: s32
+    source_bit_depth: s32
+    has_alpha: bool
+    source_premultiplied: bool
+    frame_count: s32
+    color_known: bool
+    color_primaries: s32
+    transfer_characteristics: s32
+    matrix_coefficients: s32
+    full_range: bool
+    metadata_bytes: s64
+}
+ValidateMetadata :: (metadata: ImageMetadata, limits: DecodeLimits) -> DecodeError {
+    error := ValidateDimensions(metadata.width, metadata.height, limits)
+    if error.code != DecodeOK { return error }
+    if metadata.source_bit_depth < 0 || metadata.frame_count < 0 || metadata.metadata_bytes < 0 { return Error(InvalidInput) }
+    if metadata.frame_count > limits.max_frames || metadata.metadata_bytes > limits.max_metadata_bytes { return Error(LimitExceeded) }
+    return Error(DecodeOK)
+}

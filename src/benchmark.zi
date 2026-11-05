@@ -1,0 +1,194 @@
+using API :: #import "api"
+#import "std/vec"
+#import "std/image"
+#import "std/file"
+#import "std/timer_linux"
+#import "std/json_document"
+#import "std/text_buffer"
+
+MaxBenchmarkIterations :: 1024;
+TimingSummary :: struct { p50_ns: s64; p95_ns: s64; total_ns: s64; iterations: s32; error: DecodeError; }
+// Nearest-rank percentiles. Sorts caller-owned sample storage in place.
+SummarizeTimings :: (samples: []s64) -> TimingSummary {
+    summary: TimingSummary
+    if samples.count <= 0 || samples.count > 10000 { summary.error = Error(InvalidInput); return summary }
+    for i: 0..samples.count - 1 {
+        if samples[i] < 0 || samples[i] > 9223372036854775807 - summary.total_ns { summary.error = Error(InvalidInput); return summary }
+        summary.total_ns += samples[i]
+    }
+    for i: 1..samples.count - 1 {
+        value := samples[i]; at := i
+        while at > 0 && samples[at - 1] > value { samples[at] = samples[at - 1]; at -= 1 }
+        samples[at] = value
+    }
+    summary.iterations = cast(s32)samples.count
+    summary.p50_ns = samples[(samples.count * 50 + 99) / 100 - 1]
+    summary.p95_ns = samples[(samples.count * 95 + 99) / 100 - 1]
+    summary.error = Error(DecodeOK)
+    return summary
+}
+FileBytes :: struct { data: Vec(u8); error: DecodeError; }
+FileFailure :: (error: DecodeError) -> FileBytes {
+    failure: FileBytes; failure.error = error; return failure
+}
+ReadBoundedFile :: (path: string, maximum: s64, token: *Cancellation) -> FileBytes {
+    error := CancellationError(token)
+    if error.code != DecodeOK { return FileFailure(error) }
+    if maximum <= 0 { return FileFailure(Error(InvalidLimits)) }
+    file := OpenRead(path)
+    if !file.valid { return FileFailure(Error(InputOutputFailed)) }
+    size := FileSize(file)
+    if size <= 0 || size > maximum {
+        unused CloseFile(file)
+        return FileFailure(Error(ifx size < 0 then InputOutputFailed else ifx size == 0 then InvalidInput else LimitExceeded))
+    }
+    bytes: Vec(u8)
+    if !VecResizeBounded(bytes, size, size) { unused CloseFile(file); return FileFailure(Error(AllocationFailed)) }
+    {
+        data := VecSlice(bytes, 0, size)
+        offset: s64
+        while offset < size {
+            error = CancellationError(token)
+            if error.code != DecodeOK { unused CloseFile(file); return FileFailure(error) }
+            wanted := ifx size - offset < 65536 then size - offset else 65536
+            count := ReadAt(file, data[offset:offset + wanted], offset)
+            if count <= 0 { unused CloseFile(file); return FileFailure(Error(InputOutputFailed, offset)) }
+            offset += count
+        }
+    }
+    // Reject a file that grew during the bounded read.
+    if FileSize(file) != size { unused CloseFile(file); return FileFailure(Error(InputOutputFailed)) }
+    if !CloseFile(file) { return FileFailure(Error(InputOutputFailed)) }
+    return FileBytes.{bytes, Error(DecodeOK)}
+}
+SamePixels :: (picture: *Image, expected: []u8) -> bool {
+    if !ImageValid(picture) || picture.pixels.count != expected.count { return false }
+    for i: 0..expected.count - 1 { if picture.pixels[i] != expected[i] { return false } }
+    return true
+}
+ImageHash :: (picture: *Image) -> u64 {
+    hash: u64 = 14695981039346656037
+    for i: 0..picture.pixels.count - 1 { hash = (hash ^ cast(u64)picture.pixels[i]) * cast(u64)1099511628211 }
+    return hash
+}
+HashText :: (hash: u64) -> string {
+    digits := "0123456789abcdef"
+    text: Vec(u8)
+    for i: 0..15 {
+        shift := cast(u64)((15 - i) * 4)
+        if !VecPush(text, digits[cast(s64)((hash >> shift) & cast(u64)15)]) { return "" }
+    }
+    return BuilderFinish(text)
+}
+BenchmarkResult :: struct {
+    is_ok: bool
+    timing: TimingSummary
+    samples_ns: [1024]s64
+    output_hash: u64
+    input_bytes: s64
+    output_bytes: s64
+    pixel_count: s64
+    active_workers: s32
+    error: DecodeError
+}
+// Each sample opens/reads/closes input then calls the provider. Allocation of
+// input/output is timed. Output validation, hash and destruction are untimed.
+// An initial correctness decode MUST pass before the first timed sample.
+BenchmarkFile :: (path: string, expected: []u8, metadata: ImageMetadata, options: *DecodeOptions,
+                  provider: DecodeProcedure, iterations: s32) -> BenchmarkResult {
+    result: BenchmarkResult
+    result.error = ValidateOptions(options)
+    if result.error.code != DecodeOK { return result }
+    if iterations <= 0 || iterations > MaxBenchmarkIterations { result.error = Error(InvalidInput); return result }
+    result.error = ValidateMetadata(metadata, options.limits)
+    if result.error.code != DecodeOK { return result }
+    if provider == null { result.error = Error(UnsupportedCapability); return result }
+    if options.workers == null || options.workers.active_workers != 0 || options.workers.working_bytes != 0 { result.error = Error(InvalidInput); return result }
+    options.workers.peak_workers = 0
+    options.workers.peak_working_bytes = 0
+    {
+        file := ReadBoundedFile(path, options.limits.max_input_bytes, options.cancellation)
+        if file.error.code != DecodeOK { result.error = file.error; return result }
+        input := file.data
+        decoded := provider(BorrowBytes(VecSlice(input, 0, input.count)), metadata, options)
+        if !decoded.is_ok { result.error = decoded.error; return result }
+        if options.workers.active_workers != 0 || options.workers.working_bytes != 0 { result.error = Error(InvalidInput); return result }
+        if !SamePixels(*decoded.image, expected) || decoded.image.width != metadata.width || decoded.image.height != metadata.height { result.error = Error(CorrectnessMismatch); return result }
+        if decoded.metadata.width != metadata.width || decoded.metadata.height != metadata.height { result.error = Error(CorrectnessMismatch); return result }
+        result.output_hash = ImageHash(*decoded.image)
+        result.input_bytes = input.count
+        result.output_bytes = expected.count
+        result.pixel_count = cast(s64)metadata.width * metadata.height
+    }
+    for iteration: 0..iterations - 1 {
+        start := MonotonicNanoseconds()
+        if start < 0 { result.error = Error(UnsupportedCapability); return result }
+        file := ReadBoundedFile(path, options.limits.max_input_bytes, options.cancellation)
+        if file.error.code != DecodeOK { result.error = file.error; return result }
+        input := file.data
+        decoded := provider(BorrowBytes(VecSlice(input, 0, input.count)), metadata, options)
+        end := MonotonicNanoseconds()
+        if !decoded.is_ok { result.error = decoded.error; return result }
+        if options.workers.active_workers != 0 || options.workers.working_bytes != 0 { result.error = Error(InvalidInput); return result }
+        if end < start { result.error = Error(UnsupportedCapability); return result }
+        if input.count != result.input_bytes || !SamePixels(*decoded.image, expected) || ImageHash(*decoded.image) != result.output_hash ||
+           decoded.image.width != metadata.width || decoded.image.height != metadata.height ||
+           decoded.metadata.width != metadata.width || decoded.metadata.height != metadata.height {
+            result.error = Error(CorrectnessMismatch); return result
+        }
+        result.samples_ns[iteration] = end - start
+    }
+    result.timing = SummarizeTimings(result.samples_ns[:iterations])
+    result.active_workers = options.workers.peak_workers
+    if result.active_workers <= 0 || result.active_workers > options.workers.max_workers { result.error = Error(UnsupportedCapability); return result }
+    result.error = result.timing.error
+    result.is_ok = result.error.code == DecodeOK
+    return result
+}
+// JSON null represents unavailable measurement, never an invented zero.
+BenchmarkJSON :: (result: *BenchmarkResult, provider_name: string, toolchain_version: string) -> string {
+    if !result.is_ok { return "" }
+    document: JsonDocument
+    object := JsonNewObject(*document); document.root = object
+    unused JsonSet(*document, object, "schema_version", JsonNewInteger(*document, 1))
+    unused JsonSet(*document, object, "provider", JsonNewString(*document, provider_name))
+    unused JsonSet(*document, object, "mode", JsonNewString(*document, "warm"))
+    unused JsonSet(*document, object, "cache_policy", JsonNewString(*document, "correctness preflight warms input; no cache eviction"))
+    unused JsonSet(*document, object, "timing_scope", JsonNewString(*document, "open-read-close-decode-allocate; excludes validation/hash/destruction"))
+    unused JsonSet(*document, object, "correctness_verified", JsonNewBool(*document, true))
+    unused JsonSet(*document, object, "iterations", JsonNewInteger(*document, result.timing.iterations))
+    unused JsonSet(*document, object, "p50_ns", JsonNewInteger(*document, result.timing.p50_ns))
+    unused JsonSet(*document, object, "p95_ns", JsonNewInteger(*document, result.timing.p95_ns))
+    unused JsonSet(*document, object, "total_ns", JsonNewInteger(*document, result.timing.total_ns))
+    unused JsonSet(*document, object, "input_bytes", JsonNewInteger(*document, result.input_bytes))
+    unused JsonSet(*document, object, "output_bytes", JsonNewInteger(*document, result.output_bytes))
+    unused JsonSet(*document, object, "pixels", JsonNewInteger(*document, result.pixel_count))
+    unused JsonSet(*document, object, "active_workers", JsonNewInteger(*document, result.active_workers))
+    unused JsonSet(*document, object, "output_hash_algorithm", JsonNewString(*document, "fnv1a64"))
+    unused JsonSet(*document, object, "output_hash", JsonNewString(*document, HashText(result.output_hash)))
+    samples := JsonNewArray(*document)
+    for i: 0..result.timing.iterations - 1 { unused JsonAppend(*document, samples, JsonNewInteger(*document, result.samples_ns[i])) }
+    unused JsonSet(*document, object, "samples_ns", samples)
+    // Integer throughput avoids fabricated sub-nanosecond precision.
+    throughput := ifx result.timing.total_ns > 0 then cast(float64)result.pixel_count * cast(float64)result.timing.iterations * 1000000000.0 / cast(float64)result.timing.total_ns else 0.0
+    if result.timing.total_ns > 0 {
+        unused JsonSet(*document, object, "pixels_per_second", JsonNewInteger(*document, cast(s64)throughput))
+    } else { unused JsonSet(*document, object, "pixels_per_second", JsonNewNull(*document)) }
+    keys: [5]string = .["cpu_ns_per_pixel", "peak_rss_bytes", "allocations", "energy_joules", "cpu_capabilities"]
+    for key: keys {
+        unused JsonSet(*document, object, key, JsonNewNull(*document))
+    }
+    unavailable := JsonNewObject(*document)
+    unused JsonSet(*document, unavailable, "cpu_ns_per_pixel", JsonNewString(*document, "no process CPU clock instrument"))
+    unused JsonSet(*document, unavailable, "peak_rss_bytes", JsonNewString(*document, "no peak RSS instrument"))
+    unused JsonSet(*document, unavailable, "allocations", JsonNewString(*document, "no allocator instrumentation"))
+    unused JsonSet(*document, unavailable, "energy_joules", JsonNewString(*document, "no energy counter"))
+    unused JsonSet(*document, unavailable, "cpu_capabilities", JsonNewString(*document, "no runtime CPU capability query"))
+    unused JsonSet(*document, object, "unavailable", unavailable)
+    versions := JsonNewObject(*document)
+    unused JsonSet(*document, versions, "runner", JsonNewString(*document, "image-codec/benchmark-schema-1"))
+    if toolchain_version.count > 0 { unused JsonSet(*document, versions, "ziran", JsonNewString(*document, toolchain_version)) }
+    else { unused JsonSet(*document, versions, "ziran", JsonNewNull(*document)) }
+    unused JsonSet(*document, object, "tool_versions", versions)
+    return JsonWrite(*document, object, JsonPythonStyle(2))
+}

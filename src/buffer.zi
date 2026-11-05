@@ -1,0 +1,27 @@
+using VecModule :: #import "std/vec"
+using LimitsModule :: #import "limits"
+using SchedulerModule :: #import "scheduler"
+// One component plane. Samples are 1 or 2 bytes; multi-byte samples use
+// little endian storage. The owning Vec may include row padding.
+Plane :: struct { width: s32; height: s32; stride: s64; sample_bytes: s32; storage: Vec(u8); }
+PlaneView :: struct { width: s32; height: s32; stride: s64; sample_bytes: s32; data: []u8; }
+OutputBuffer :: struct { data: []u8; stride: s64; }
+ValidatePlane :: (plane: PlaneView, limits: DecodeLimits) -> DecodeError {
+    error := ValidateDimensions(plane.width, plane.height, limits)
+    if error.code != DecodeOK { return error }
+    if plane.sample_bytes != 1 && plane.sample_bytes != 2 { return Error(UnsupportedCapability) }
+    bytes, span_error := RequiredSpan(plane.width, plane.height, plane.sample_bytes, plane.stride)
+    if span_error.code != DecodeOK { return span_error }
+    if bytes > limits.max_working_bytes { return Error(LimitExceeded) }
+    if plane.data.count < bytes { return Error(OutputTooSmall) }
+    return Error(DecodeOK)
+}
+ValidateOutput :: (output: OutputBuffer, width: s32, height: s32, limits: DecodeLimits) -> DecodeError {
+    error := ValidateDimensions(width, height, limits)
+    if error.code != DecodeOK { return error }
+    bytes, span_error := RequiredSpan(width, height, 4, output.stride)
+    if span_error.code != DecodeOK { return span_error }
+    if bytes > limits.max_output_bytes { return Error(LimitExceeded) }
+    if output.data.count < bytes { return Error(OutputTooSmall) }
+    return Error(DecodeOK)
+}

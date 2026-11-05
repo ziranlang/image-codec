@@ -1,0 +1,43 @@
+using Pixels :: #import "std/image"
+using MetadataModule :: #import "metadata"
+using BufferModule :: #import "buffer"
+using BytesModule :: #import "bytes"
+DecodeResult :: struct { is_ok: bool; image: Image; metadata: ImageMetadata; error: DecodeError; }
+DecodeFailure :: (error: DecodeError) -> DecodeResult {
+    result: DecodeResult
+    result.error = error
+    if error.code == DecodeOK { result.error = Error(InvalidInput) }
+    return result
+}
+// One fallible bulk allocation. Check cancellation around allocation; pixel
+// providers and row copies add their own checkpoints during actual work.
+AllocateImage :: (metadata: ImageMetadata, limits: DecodeLimits, token: *Cancellation) -> DecodeResult {
+    error := ValidateMetadata(metadata, limits)
+    if error.code != DecodeOK { return DecodeFailure(error) }
+    error = CancellationError(token)
+    if error.code != DecodeOK { return DecodeFailure(error) }
+    result: DecodeResult
+    result.metadata = metadata
+    result.image.width = metadata.width
+    result.image.height = metadata.height
+    bytes := cast(s64)metadata.width * metadata.height * 4
+    if !VecResizeBounded(result.image.pixels, bytes, bytes) { return DecodeFailure(Error(AllocationFailed)) }
+    error = CancellationError(token)
+    if error.code != DecodeOK { return DecodeFailure(error) }
+    result.is_ok = true
+    result.error = Error(DecodeOK)
+    return result
+}
+// Caller-owned output borrows its storage. Validation and pre-cancellation
+// precede writes; cancellation during work can leave complete rows written.
+CopyImageToOutput :: (image: *Image, output: OutputBuffer, limits: DecodeLimits, token: *Cancellation) -> DecodeError {
+    if image == null || !ImageValid(image) { return Error(InvalidInput) }
+    error := ValidateOutput(output, image.width, image.height, limits)
+    if error.code != DecodeOK { return error }
+    for row: 0..image.height - 1 {
+        error = CancellationError(token)
+        if error.code != DecodeOK { return error }
+        for byte: 0..cast(s64)image.width * 4 - 1 { output.data[row * output.stride + byte] = image.pixels[cast(s64)row * image.width * 4 + byte] }
+    }
+    return Error(DecodeOK)
+}

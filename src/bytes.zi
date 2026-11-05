@@ -1,0 +1,11 @@
+using LimitsModule :: #import "limits"
+// A synchronous borrow, never an owner. The caller keeps its backing storage
+// alive and unchanged throughout use. Ziran []u8 is not a const slice.
+BorrowedBytes :: struct { data: []u8; }
+BorrowBytes :: (data: []u8) -> BorrowedBytes { return BorrowedBytes.{data} }
+ByteRange :: (input: BorrowedBytes, offset: s64, count: s64) -> (bytes: BorrowedBytes, error: DecodeError) {
+    empty: BorrowedBytes
+    if offset < 0 || count < 0 { return empty, Error(InvalidInput) }
+    if offset > input.data.count || count > input.data.count - offset { return empty, Error(TruncatedInput, offset) }
+    return BorrowBytes(input.data[offset:offset + count]), Error(DecodeOK)
+}

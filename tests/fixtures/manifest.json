@@ -1,0 +1,1552 @@
+{
+  "schema_version": 1,
+  "fetch_policy": "never during build or verification",
+  "fixtures": [
+    {
+      "path": "avif/README.md",
+      "sha256": "4e6ea5a17d2bad32f5f4d67a79af83e54ae0191bcd82c336a5d831ddcd943426",
+      "bytes": 1543,
+      "role": "provenance",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/README.md",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/animated.avif",
+      "sha256": "bd0a54c5925b35a97c9d0ab791026e4ed51b8c7fba1f25a4c8a1f4e3768b6670",
+      "bytes": 1990,
+      "role": "encoded",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/animated.avif",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      },
+      "dimensions": [
+        8,
+        6
+      ],
+      "profile": "8-bit YUV444",
+      "expectation": {
+        "kind": "pixels",
+        "golden": "avif/animated.rgba",
+        "max_byte_error": 0,
+        "frame_policy": "first-complete-frame",
+        "source_frames": 2
+      }
+    },
+    {
+      "path": "avif/animated.rgba",
+      "sha256": "76ebf70918d6acdc9fa555bcd114432405516c8f7c4f4d6befdabc58603e7af6",
+      "bytes": 192,
+      "role": "golden",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/animated.rgba",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/animated.txt",
+      "sha256": "919dd866f4af11908dcb42888eec36687ee688ce0a96b40741f62e7c5152244d",
+      "bytes": 6,
+      "role": "expectation",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/animated.txt",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/bad-crop.avif",
+      "sha256": "836d50f110420be5d9e37ddc5974b2fe95ca8fbb599086358aec2173a789afb1",
+      "bytes": 661,
+      "role": "encoded",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/bad-crop.avif",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      },
+      "dimensions": null,
+      "profile": "damaged AVIF copy of generated fixture",
+      "expectation": {
+        "kind": "reject",
+        "error": "MalformedInput",
+        "malformed_class": "bad-crop"
+      }
+    },
+    {
+      "path": "avif/gray10.avif",
+      "sha256": "e7f396c59ac85ff34c43de498e5b6759621ed3d9aabe3dcda9099dbf732a78f4",
+      "bytes": 370,
+      "role": "encoded",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/gray10.avif",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      },
+      "dimensions": [
+        8,
+        6
+      ],
+      "profile": "10-bit monochrome",
+      "expectation": {
+        "kind": "pixels",
+        "golden": "avif/gray10.rgba",
+        "max_byte_error": 1,
+        "frame_policy": "first-complete-frame",
+        "source_frames": 1
+      }
+    },
+    {
+      "path": "avif/gray10.rgba",
+      "sha256": "c5bbfcb1142a2ff65a616ad76530ea898e54b02d6edf9a890ecfa5fd1b0e1d66",
+      "bytes": 192,
+      "role": "golden",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/gray10.rgba",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/gray10.txt",
+      "sha256": "4e9012aa566ac37ccbf0c377189c025a2106143d6d2a9e445dd09da4fbf25c5c",
+      "bytes": 6,
+      "role": "expectation",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/gray10.txt",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/gray12.avif",
+      "sha256": "edf073cc7284f97e2d8ccf00676c9326c70d29a753899ae76e7bbcb66eb22636",
+      "bytes": 350,
+      "role": "encoded",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/gray12.avif",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      },
+      "dimensions": [
+        8,
+        6
+      ],
+      "profile": "12-bit monochrome",
+      "expectation": {
+        "kind": "pixels",
+        "golden": "avif/gray12.rgba",
+        "max_byte_error": 1,
+        "frame_policy": "first-complete-frame",
+        "source_frames": 1
+      }
+    },
+    {
+      "path": "avif/gray12.rgba",
+      "sha256": "c5bbfcb1142a2ff65a616ad76530ea898e54b02d6edf9a890ecfa5fd1b0e1d66",
+      "bytes": 192,
+      "role": "golden",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/gray12.rgba",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/gray12.txt",
+      "sha256": "4e9012aa566ac37ccbf0c377189c025a2106143d6d2a9e445dd09da4fbf25c5c",
+      "bytes": 6,
+      "role": "expectation",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/gray12.txt",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/gray8.avif",
+      "sha256": "b2e5f9df1f60ae088b3fef696086256284a453aea007b49d48671d0dc8f3c754",
+      "bytes": 332,
+      "role": "encoded",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/gray8.avif",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      },
+      "dimensions": [
+        8,
+        6
+      ],
+      "profile": "8-bit monochrome",
+      "expectation": {
+        "kind": "pixels",
+        "golden": "avif/gray8.rgba",
+        "max_byte_error": 1,
+        "frame_policy": "first-complete-frame",
+        "source_frames": 1
+      }
+    },
+    {
+      "path": "avif/gray8.rgba",
+      "sha256": "c5bbfcb1142a2ff65a616ad76530ea898e54b02d6edf9a890ecfa5fd1b0e1d66",
+      "bytes": 192,
+      "role": "golden",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/gray8.rgba",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/gray8.txt",
+      "sha256": "4e9012aa566ac37ccbf0c377189c025a2106143d6d2a9e445dd09da4fbf25c5c",
+      "bytes": 6,
+      "role": "expectation",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/gray8.txt",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/malformed.avif",
+      "sha256": "652ecfd039145837f3dae56c91cc7726b579d1e55c03110cc09d54d7fc00ff48",
+      "bytes": 32,
+      "role": "encoded",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/malformed.avif",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      },
+      "dimensions": null,
+      "profile": "damaged AVIF copy of generated fixture",
+      "expectation": {
+        "kind": "reject",
+        "error": "MalformedInput",
+        "malformed_class": "malformed"
+      }
+    },
+    {
+      "path": "avif/opaque.avif",
+      "sha256": "f4936f9c25bbdde721c0b76b0e2f00aee64272746d87211990995c777a74e048",
+      "bytes": 409,
+      "role": "encoded",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/opaque.avif",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      },
+      "dimensions": [
+        8,
+        6
+      ],
+      "profile": "8-bit YUV444",
+      "expectation": {
+        "kind": "pixels",
+        "golden": "avif/opaque.rgba",
+        "max_byte_error": 0,
+        "frame_policy": "first-complete-frame",
+        "source_frames": 1
+      }
+    },
+    {
+      "path": "avif/opaque.rgba",
+      "sha256": "d85d4af84ea924e37ca476b89aeacf0fdf2f8854b3b30f605782e87fd029adbb",
+      "bytes": 192,
+      "role": "golden",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/opaque.rgba",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/opaque.txt",
+      "sha256": "919dd866f4af11908dcb42888eec36687ee688ce0a96b40741f62e7c5152244d",
+      "bytes": 6,
+      "role": "expectation",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/opaque.txt",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/oversized.avif",
+      "sha256": "ab7a73ef6fd44e581556c7b03d96f24545a326d23095648c042dd6ed0937e894",
+      "bytes": 600,
+      "role": "encoded",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/oversized.avif",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      },
+      "dimensions": null,
+      "profile": "damaged AVIF copy of generated fixture",
+      "expectation": {
+        "kind": "reject",
+        "error": "LimitExceeded",
+        "malformed_class": "oversized"
+      }
+    },
+    {
+      "path": "avif/pixel-limit.avif",
+      "sha256": "844b21eec75eb6c14811ae62d2503ee516f65dfd2b1b01d283f1d839f2282f79",
+      "bytes": 600,
+      "role": "encoded",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/pixel-limit.avif",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      },
+      "dimensions": null,
+      "profile": "damaged AVIF copy of generated fixture",
+      "expectation": {
+        "kind": "reject",
+        "error": "LimitExceeded",
+        "malformed_class": "pixel-limit"
+      }
+    },
+    {
+      "path": "avif/premultiplied.avif",
+      "sha256": "f89a872ce42768c499ae6d6368ed515327311441b9effdbaeebad15c24301e20",
+      "bytes": 678,
+      "role": "encoded",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/premultiplied.avif",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      },
+      "dimensions": [
+        8,
+        6
+      ],
+      "profile": "8-bit YUV444",
+      "expectation": {
+        "kind": "pixels",
+        "golden": "avif/premultiplied.rgba",
+        "max_byte_error": 4,
+        "frame_policy": "first-complete-frame",
+        "source_frames": 1
+      }
+    },
+    {
+      "path": "avif/premultiplied.rgba",
+      "sha256": "fcefc73ceeab7dac7583a1f9be730209c69daceec2e942a67c8c1b31e5153260",
+      "bytes": 192,
+      "role": "golden",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/premultiplied.rgba",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/premultiplied.txt",
+      "sha256": "f04d731a1cc8af0f5f65c2e579f72f5cda54ecceab852937e119a5ed5dba3a28",
+      "bytes": 6,
+      "role": "expectation",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/premultiplied.txt",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/rgba10.avif",
+      "sha256": "d4bbf48d2733ea293d91332d23e2dae19c4b5faf755b462ea7ff1aa46fefe5f7",
+      "bytes": 643,
+      "role": "encoded",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/rgba10.avif",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      },
+      "dimensions": [
+        8,
+        6
+      ],
+      "profile": "10-bit YUV444",
+      "expectation": {
+        "kind": "pixels",
+        "golden": "avif/rgba10.rgba",
+        "max_byte_error": 1,
+        "frame_policy": "first-complete-frame",
+        "source_frames": 1
+      }
+    },
+    {
+      "path": "avif/rgba10.rgba",
+      "sha256": "76ebf70918d6acdc9fa555bcd114432405516c8f7c4f4d6befdabc58603e7af6",
+      "bytes": 192,
+      "role": "golden",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/rgba10.rgba",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/rgba10.txt",
+      "sha256": "4e9012aa566ac37ccbf0c377189c025a2106143d6d2a9e445dd09da4fbf25c5c",
+      "bytes": 6,
+      "role": "expectation",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/rgba10.txt",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/rgba12.avif",
+      "sha256": "ceed350c4975a378577753ccf9b7878431e621bb1d3700596eb46237be58aa58",
+      "bytes": 665,
+      "role": "encoded",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/rgba12.avif",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      },
+      "dimensions": [
+        8,
+        6
+      ],
+      "profile": "12-bit YUV444",
+      "expectation": {
+        "kind": "pixels",
+        "golden": "avif/rgba12.rgba",
+        "max_byte_error": 1,
+        "frame_policy": "first-complete-frame",
+        "source_frames": 1
+      }
+    },
+    {
+      "path": "avif/rgba12.rgba",
+      "sha256": "76ebf70918d6acdc9fa555bcd114432405516c8f7c4f4d6befdabc58603e7af6",
+      "bytes": 192,
+      "role": "golden",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/rgba12.rgba",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/rgba12.txt",
+      "sha256": "4e9012aa566ac37ccbf0c377189c025a2106143d6d2a9e445dd09da4fbf25c5c",
+      "bytes": 6,
+      "role": "expectation",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/rgba12.txt",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/rgba8.avif",
+      "sha256": "f1e2475c722e033f702bb8c4f73a6d116b4883ebfcad4bc343a8612bf3b7c38b",
+      "bytes": 600,
+      "role": "encoded",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/rgba8.avif",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      },
+      "dimensions": [
+        8,
+        6
+      ],
+      "profile": "8-bit YUV444",
+      "expectation": {
+        "kind": "pixels",
+        "golden": "avif/rgba8.rgba",
+        "max_byte_error": 0,
+        "frame_policy": "first-complete-frame",
+        "source_frames": 1
+      }
+    },
+    {
+      "path": "avif/rgba8.rgba",
+      "sha256": "76ebf70918d6acdc9fa555bcd114432405516c8f7c4f4d6befdabc58603e7af6",
+      "bytes": 192,
+      "role": "golden",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/rgba8.rgba",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/rgba8.txt",
+      "sha256": "919dd866f4af11908dcb42888eec36687ee688ce0a96b40741f62e7c5152244d",
+      "bytes": 6,
+      "role": "expectation",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/rgba8.txt",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/transform00.avif",
+      "sha256": "8f3f1a8ba5d04220a79713335925968262b18b6a15e75a56e5c564a3ec5bd602",
+      "bytes": 661,
+      "role": "encoded",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/transform00.avif",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      },
+      "dimensions": [
+        4,
+        4
+      ],
+      "profile": "8-bit YUV444",
+      "expectation": {
+        "kind": "pixels",
+        "golden": "avif/transform00.rgba",
+        "max_byte_error": 0,
+        "frame_policy": "first-complete-frame",
+        "source_frames": 1
+      }
+    },
+    {
+      "path": "avif/transform00.rgba",
+      "sha256": "2633d40f6e934e50faaf1ab5ea6bd1e0ccfb84eaee416b134e87e72841447e55",
+      "bytes": 64,
+      "role": "golden",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/transform00.rgba",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/transform00.txt",
+      "sha256": "373ff7a5a47d3350f219befcc9d307ca6f10e68790155a39c1777b0d07da42e0",
+      "bytes": 6,
+      "role": "expectation",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/transform00.txt",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/transform01.avif",
+      "sha256": "24c0709c1a12cd4f605548b6cf6b21bbdadc98aad10076d3e9e5bda02ea6da85",
+      "bytes": 661,
+      "role": "encoded",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/transform01.avif",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      },
+      "dimensions": [
+        4,
+        4
+      ],
+      "profile": "8-bit YUV444",
+      "expectation": {
+        "kind": "pixels",
+        "golden": "avif/transform01.rgba",
+        "max_byte_error": 0,
+        "frame_policy": "first-complete-frame",
+        "source_frames": 1
+      }
+    },
+    {
+      "path": "avif/transform01.rgba",
+      "sha256": "1cd0edce27d7159c1591ea4042c2106765f68d934af848ee254d1160424305f3",
+      "bytes": 64,
+      "role": "golden",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/transform01.rgba",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/transform01.txt",
+      "sha256": "373ff7a5a47d3350f219befcc9d307ca6f10e68790155a39c1777b0d07da42e0",
+      "bytes": 6,
+      "role": "expectation",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/transform01.txt",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/transform10.avif",
+      "sha256": "214b8cfd00e439a8e44bf8c2e46ce0f1bd3fdc70a76063d2dbad97b932eff14a",
+      "bytes": 661,
+      "role": "encoded",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/transform10.avif",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      },
+      "dimensions": [
+        4,
+        4
+      ],
+      "profile": "8-bit YUV444",
+      "expectation": {
+        "kind": "pixels",
+        "golden": "avif/transform10.rgba",
+        "max_byte_error": 0,
+        "frame_policy": "first-complete-frame",
+        "source_frames": 1
+      }
+    },
+    {
+      "path": "avif/transform10.rgba",
+      "sha256": "699f0dc840d52133477c1fca05b79d9ae96efdac175adfc0cc71e7e3a077388f",
+      "bytes": 64,
+      "role": "golden",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/transform10.rgba",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/transform10.txt",
+      "sha256": "373ff7a5a47d3350f219befcc9d307ca6f10e68790155a39c1777b0d07da42e0",
+      "bytes": 6,
+      "role": "expectation",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/transform10.txt",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/transform11.avif",
+      "sha256": "3925da83bdab664075f17d702d098baab563f8580b9d4542db83c3a8bd7cbf52",
+      "bytes": 661,
+      "role": "encoded",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/transform11.avif",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      },
+      "dimensions": [
+        4,
+        4
+      ],
+      "profile": "8-bit YUV444",
+      "expectation": {
+        "kind": "pixels",
+        "golden": "avif/transform11.rgba",
+        "max_byte_error": 0,
+        "frame_policy": "first-complete-frame",
+        "source_frames": 1
+      }
+    },
+    {
+      "path": "avif/transform11.rgba",
+      "sha256": "6fef5af585c1df4fad2f1a89df6a350a4867c1ec20cf58c1fcb55b651e102078",
+      "bytes": 64,
+      "role": "golden",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/transform11.rgba",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/transform11.txt",
+      "sha256": "373ff7a5a47d3350f219befcc9d307ca6f10e68790155a39c1777b0d07da42e0",
+      "bytes": 6,
+      "role": "expectation",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/transform11.txt",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/transform20.avif",
+      "sha256": "f15373a287a29e5578d79158fc229ee993f0af37bea8f959e8b1b8a3d814df0c",
+      "bytes": 661,
+      "role": "encoded",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/transform20.avif",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      },
+      "dimensions": [
+        4,
+        4
+      ],
+      "profile": "8-bit YUV444",
+      "expectation": {
+        "kind": "pixels",
+        "golden": "avif/transform20.rgba",
+        "max_byte_error": 0,
+        "frame_policy": "first-complete-frame",
+        "source_frames": 1
+      }
+    },
+    {
+      "path": "avif/transform20.rgba",
+      "sha256": "1cd0edce27d7159c1591ea4042c2106765f68d934af848ee254d1160424305f3",
+      "bytes": 64,
+      "role": "golden",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/transform20.rgba",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/transform20.txt",
+      "sha256": "373ff7a5a47d3350f219befcc9d307ca6f10e68790155a39c1777b0d07da42e0",
+      "bytes": 6,
+      "role": "expectation",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/transform20.txt",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/transform21.avif",
+      "sha256": "0428deab768b0f4cfe7774fa3782c201fa4973d169c5841dcac7409da82123a7",
+      "bytes": 661,
+      "role": "encoded",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/transform21.avif",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      },
+      "dimensions": [
+        4,
+        4
+      ],
+      "profile": "8-bit YUV444",
+      "expectation": {
+        "kind": "pixels",
+        "golden": "avif/transform21.rgba",
+        "max_byte_error": 0,
+        "frame_policy": "first-complete-frame",
+        "source_frames": 1
+      }
+    },
+    {
+      "path": "avif/transform21.rgba",
+      "sha256": "2633d40f6e934e50faaf1ab5ea6bd1e0ccfb84eaee416b134e87e72841447e55",
+      "bytes": 64,
+      "role": "golden",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/transform21.rgba",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/transform21.txt",
+      "sha256": "373ff7a5a47d3350f219befcc9d307ca6f10e68790155a39c1777b0d07da42e0",
+      "bytes": 6,
+      "role": "expectation",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/transform21.txt",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/transform30.avif",
+      "sha256": "c7c25b1f2c3f0836b35e49b25e715f1dc37794c6e4517a84f06dcd407134dc70",
+      "bytes": 661,
+      "role": "encoded",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/transform30.avif",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      },
+      "dimensions": [
+        4,
+        4
+      ],
+      "profile": "8-bit YUV444",
+      "expectation": {
+        "kind": "pixels",
+        "golden": "avif/transform30.rgba",
+        "max_byte_error": 0,
+        "frame_policy": "first-complete-frame",
+        "source_frames": 1
+      }
+    },
+    {
+      "path": "avif/transform30.rgba",
+      "sha256": "6fef5af585c1df4fad2f1a89df6a350a4867c1ec20cf58c1fcb55b651e102078",
+      "bytes": 64,
+      "role": "golden",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/transform30.rgba",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/transform30.txt",
+      "sha256": "373ff7a5a47d3350f219befcc9d307ca6f10e68790155a39c1777b0d07da42e0",
+      "bytes": 6,
+      "role": "expectation",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/transform30.txt",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/transform31.avif",
+      "sha256": "0231468e1c53fb0574362ab356db7bb464e0608dc76941db39b4e52e0e82a7e3",
+      "bytes": 661,
+      "role": "encoded",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/transform31.avif",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      },
+      "dimensions": [
+        4,
+        4
+      ],
+      "profile": "8-bit YUV444",
+      "expectation": {
+        "kind": "pixels",
+        "golden": "avif/transform31.rgba",
+        "max_byte_error": 0,
+        "frame_policy": "first-complete-frame",
+        "source_frames": 1
+      }
+    },
+    {
+      "path": "avif/transform31.rgba",
+      "sha256": "699f0dc840d52133477c1fca05b79d9ae96efdac175adfc0cc71e7e3a077388f",
+      "bytes": 64,
+      "role": "golden",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/transform31.rgba",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/transform31.txt",
+      "sha256": "373ff7a5a47d3350f219befcc9d307ca6f10e68790155a39c1777b0d07da42e0",
+      "bytes": 6,
+      "role": "expectation",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/transform31.txt",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      }
+    },
+    {
+      "path": "avif/truncated.avif",
+      "sha256": "8b6d18568301e8b7f87303ea0dc3274a68082f933177c24758e4f0d00c0bd3de",
+      "bytes": 599,
+      "role": "encoded",
+      "format": "avif",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/avif/truncated.avif",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      },
+      "dimensions": null,
+      "profile": "damaged AVIF copy of generated fixture",
+      "expectation": {
+        "kind": "reject",
+        "error": "TruncatedInput",
+        "malformed_class": "truncated"
+      }
+    },
+    {
+      "path": "provenance/KRYON-LICENSE",
+      "sha256": "65f6a112e0ae20e040ec94b1a578c0cffb9aadb4c4b7aad2ceb9c14f3143cab7",
+      "bytes": 1492,
+      "role": "provenance",
+      "format": "text",
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      },
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "LICENSE",
+        "method": "byte-for-byte local copy"
+      }
+    },
+    {
+      "path": "provenance/generate_avif_fixtures.py",
+      "sha256": "ba0d85905ffd67a8ab04afabab9f5cb7da3d50d34e008ecd5b8f9aa4392a9a25",
+      "bytes": 4246,
+      "role": "provenance",
+      "format": "text",
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      },
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/generate_avif_fixtures.py",
+        "method": "byte-for-byte local copy"
+      }
+    },
+    {
+      "path": "webp/animated.rgba",
+      "sha256": "1a7f1b03715fc3d394c0a50c934d7b842be4fa0575809be13ab5f50440edf053",
+      "bytes": 256,
+      "role": "golden",
+      "format": "rgba8",
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      },
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/webp/animated.webp",
+        "method": "Pillow 12.3.0 WebP decoder; first frame RGBA8 oracle"
+      }
+    },
+    {
+      "path": "webp/animated.webp",
+      "sha256": "fbfcbdfbf4f62ea2d58ac24789f24a3988d43f928654ba13101750d79f6f5b41",
+      "bytes": 140,
+      "role": "encoded",
+      "format": "webp",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/webp/animated.webp",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      },
+      "dimensions": [
+        8,
+        8
+      ],
+      "profile": "animated VP8",
+      "expectation": {
+        "kind": "unsupported",
+        "golden": "webp/animated.rgba",
+        "max_byte_error": 3,
+        "source_frames": 2,
+        "frame_policy": "still-only",
+        "error": "UnsupportedCapability"
+      }
+    },
+    {
+      "path": "webp/lossless.rgba",
+      "sha256": "28c32f1070733ef9ee5a94a29bf787bd00efd33c30bcffc5c18df478fa79c539",
+      "bytes": 24,
+      "role": "golden",
+      "format": "rgba8",
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      },
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/webp/lossless.webp",
+        "method": "Pillow 12.3.0 WebP decoder; first frame RGBA8 oracle"
+      }
+    },
+    {
+      "path": "webp/lossless.webp",
+      "sha256": "32b44c6b6db304ee867c6e82e8873f47289188c3ee15b884d8cb9e1a7e2c8b2a",
+      "bytes": 58,
+      "role": "encoded",
+      "format": "webp",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/webp/lossless.webp",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      },
+      "dimensions": [
+        3,
+        2
+      ],
+      "profile": "VP8L",
+      "expectation": {
+        "kind": "pixels",
+        "golden": "webp/lossless.rgba",
+        "max_byte_error": 0,
+        "source_frames": 1,
+        "frame_policy": "still-only"
+      }
+    },
+    {
+      "path": "webp/lossy-alpha.rgba",
+      "sha256": "cd5ad658a7cb2ffa54831b426bf5e7ee6f2b1e6627a784808666242d4647ed6c",
+      "bytes": 1024,
+      "role": "golden",
+      "format": "rgba8",
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      },
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/webp/lossy-alpha.webp",
+        "method": "Pillow 12.3.0 WebP decoder; first frame RGBA8 oracle"
+      }
+    },
+    {
+      "path": "webp/lossy-alpha.webp",
+      "sha256": "7a9545f9e1bcd8b0e4df968a05b21b0def0463e8536af3d12ac41a49b59c3565",
+      "bytes": 108,
+      "role": "encoded",
+      "format": "webp",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/webp/lossy-alpha.webp",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      },
+      "dimensions": [
+        16,
+        16
+      ],
+      "profile": "VP8 with ALPH",
+      "expectation": {
+        "kind": "pixels",
+        "golden": "webp/lossy-alpha.rgba",
+        "max_byte_error": 3,
+        "source_frames": 1,
+        "frame_policy": "still-only"
+      }
+    },
+    {
+      "path": "webp/lossy.rgba",
+      "sha256": "c7362c20f85337e02f4c38d443df58b80e0a4bc4af85604057732183b63b3fec",
+      "bytes": 1024,
+      "role": "golden",
+      "format": "rgba8",
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      },
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/webp/lossy.webp",
+        "method": "Pillow 12.3.0 WebP decoder; first frame RGBA8 oracle"
+      }
+    },
+    {
+      "path": "webp/lossy.webp",
+      "sha256": "c5e069f3ba20b94ee6c04125f9968b66f3861358092c8eb4503f655af55a55d3",
+      "bytes": 72,
+      "role": "encoded",
+      "format": "webp",
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/webp/lossy.webp",
+        "method": "byte-for-byte local copy"
+      },
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      },
+      "dimensions": [
+        16,
+        16
+      ],
+      "profile": "VP8",
+      "expectation": {
+        "kind": "pixels",
+        "golden": "webp/lossy.rgba",
+        "max_byte_error": 3,
+        "source_frames": 1,
+        "frame_policy": "still-only"
+      }
+    },
+    {
+      "path": "webp/malformed.webp",
+      "sha256": "1549fd436c70317e988a07d5d19120eae72dc3d01e2a4971b91b210acd8ec116",
+      "bytes": 58,
+      "role": "encoded",
+      "format": "webp",
+      "dimensions": null,
+      "profile": "damaged VP8L fixture",
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      },
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/webp/lossless.webp",
+        "method": "replace RIFF signature with BAD!; preserve remaining bytes",
+        "parent_sha256": "32b44c6b6db304ee867c6e82e8873f47289188c3ee15b884d8cb9e1a7e2c8b2a"
+      },
+      "expectation": {
+        "kind": "reject",
+        "error": "MalformedInput",
+        "malformed_class": "malformed"
+      }
+    },
+    {
+      "path": "webp/truncated.webp",
+      "sha256": "229ef8ab778cccab0ba154bd8cdc947c53ddc5b4f2d74955f2517d5192358129",
+      "bytes": 57,
+      "role": "encoded",
+      "format": "webp",
+      "dimensions": null,
+      "profile": "damaged VP8L fixture",
+      "rights": {
+        "status": "repository-license",
+        "license": "BSD-3-Clause",
+        "notice": "provenance/KRYON-LICENSE"
+      },
+      "provenance": {
+        "repository": "https://github.com/kryonlabs/kryon",
+        "revision": "20b38574f23e329f889c581d37fe84e34f55b2f0",
+        "path": "tests/fixtures/webp/lossless.webp",
+        "method": "remove final byte without repairing declared RIFF size",
+        "parent_sha256": "32b44c6b6db304ee867c6e82e8873f47289188c3ee15b884d8cb9e1a7e2c8b2a"
+      },
+      "expectation": {
+        "kind": "reject",
+        "error": "TruncatedInput",
+        "malformed_class": "truncated"
+      }
+    }
+  ]
+}

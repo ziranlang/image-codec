@@ -1,0 +1,62 @@
+using LimitsModule :: #import "limits"
+// Cooperative, single-thread state. Threaded engines must serialize access
+// or adapt their own atomic cancellation to these checkpoints.
+Cancellation :: struct { requested: bool; }
+Cancel :: (token: *Cancellation) { if token != null { token.requested = true } }
+CancellationError :: (token: *Cancellation) -> DecodeError {
+    if token != null && token.requested { return Error(DecodeCancelled) }
+    return Error(DecodeOK)
+}
+// Counts all execution lanes, including the caller. No threads are launched.
+// Engine reservations cover scratch only, separate from input/output bytes.
+WorkerBudget :: struct {
+    max_workers: s32
+    active_workers: s32
+    peak_workers: s32
+    max_working_bytes: s64
+    working_bytes: s64
+    peak_working_bytes: s64
+}
+NewWorkerBudget :: (limits: DecodeLimits) -> WorkerBudget {
+    budget: WorkerBudget
+    budget.max_workers = limits.max_workers
+    budget.max_working_bytes = limits.max_working_bytes
+    return budget
+}
+ValidateWorkerBudget :: (budget: *WorkerBudget, limits: DecodeLimits) -> DecodeError {
+    if budget == null { return Error(InvalidInput) }
+    if budget.max_workers <= 0 || budget.max_workers > limits.max_workers || budget.active_workers < 0 ||
+       budget.active_workers > budget.max_workers || budget.max_working_bytes <= 0 ||
+       budget.max_working_bytes > limits.max_working_bytes || budget.working_bytes < 0 ||
+       budget.working_bytes > budget.max_working_bytes { return Error(InvalidLimits) }
+    return ValidateLimits(limits)
+}
+AcquireWorker :: (budget: *WorkerBudget, token: *Cancellation) -> DecodeError {
+    error := CancellationError(token)
+    if error.code != DecodeOK { return error }
+    if budget == null || budget.max_workers <= 0 || budget.active_workers < 0 { return Error(InvalidLimits) }
+    if budget.active_workers >= budget.max_workers { return Error(WorkerBudgetExceeded) }
+    budget.active_workers += 1
+    if budget.active_workers > budget.peak_workers { budget.peak_workers = budget.active_workers }
+    return Error(DecodeOK)
+}
+ReleaseWorker :: (budget: *WorkerBudget) -> DecodeError {
+    if budget == null || budget.active_workers <= 0 { return Error(InvalidInput) }
+    budget.active_workers -= 1
+    return Error(DecodeOK)
+}
+ReserveWorkingBytes :: (budget: *WorkerBudget, bytes: s64, token: *Cancellation) -> DecodeError {
+    error := CancellationError(token)
+    if error.code != DecodeOK { return error }
+    if budget == null || bytes < 0 || budget.working_bytes < 0 || budget.max_working_bytes <= 0 ||
+       budget.working_bytes > budget.max_working_bytes { return Error(InvalidInput) }
+    if bytes > budget.max_working_bytes - budget.working_bytes { return Error(LimitExceeded) }
+    budget.working_bytes += bytes
+    if budget.working_bytes > budget.peak_working_bytes { budget.peak_working_bytes = budget.working_bytes }
+    return Error(DecodeOK)
+}
+ReleaseWorkingBytes :: (budget: *WorkerBudget, bytes: s64) -> DecodeError {
+    if budget == null || bytes < 0 || bytes > budget.working_bytes { return Error(InvalidInput) }
+    budget.working_bytes -= bytes
+    return Error(DecodeOK)
+}

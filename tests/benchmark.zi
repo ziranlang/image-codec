@@ -1,0 +1,51 @@
+#import "image_codec/benchmark"
+#import "std/file"
+bad_calls: s32;
+bad_from: s32;
+BadShape :: (input: BorrowedBytes, metadata: ImageMetadata, options: *DecodeOptions) -> DecodeResult {
+    bad_calls += 1
+    result := DecodeRGBA8(input, metadata, options)
+    if result.is_ok && bad_calls >= bad_from { result.image.width = 12; result.image.height = 4 }
+    return result
+}
+NativeTest :: () -> s32 {
+    options := DefaultOptions()
+    workers := NewWorkerBudget(options.limits); options.workers = *workers
+    metadata: ImageMetadata
+    metadata.width = 8; metadata.height = 6; metadata.source_bit_depth = 8; metadata.frame_count = 1
+    file := ReadBoundedFile("tests/fixtures/avif/rgba8.rgba", options.limits.max_input_bytes, null)
+    if file.error.code != DecodeOK || file.data.capacity != file.data.count { return 20 }
+    if file.error.code != DecodeOK { return 10 }
+    expected := file.data
+    bad_from = 1; bad_calls = 0
+    bad := BenchmarkFile("tests/fixtures/avif/rgba8.rgba", VecSlice(expected, 0, expected.count), metadata, *options, BadShape, 7)
+    if bad.error.code != CorrectnessMismatch || bad_calls != 1 { return 11 }
+    bad_from = 2; bad_calls = 0
+    changed := BenchmarkFile("tests/fixtures/avif/rgba8.rgba", VecSlice(expected, 0, expected.count), metadata, *options, BadShape, 7)
+    if changed.error.code != CorrectnessMismatch || bad_calls != 2 { return 12 }
+    if workers.active_workers != 0 { return 13 }
+    absent := ReadBoundedFile("build/scratch/benchmark/absent", 1024, null)
+    limited := ReadBoundedFile("tests/fixtures/avif/rgba8.rgba", 1, null)
+    if absent.error.code != InputOutputFailed || limited.error.code != LimitExceeded { return 14 }
+    token: Cancellation; Cancel(*token)
+    stopped := ReadBoundedFile("tests/fixtures/avif/rgba8.rgba", 1024, *token)
+    if stopped.error.code != DecodeCancelled || stopped.data.count != 0 { return 15 }
+    if !WriteEntireFile("build/scratch/benchmark/empty", "") { return 16 }
+    empty := ReadBoundedFile("build/scratch/benchmark/empty", 1024, null)
+    if empty.error.code != InvalidInput { return 17 }
+    return 0
+}
+#program_export
+SelfTest :: () -> s32 {
+    samples: [5]s64 = .[100, 1, 30, 20, 10]
+    summary := SummarizeTimings(samples[:])
+    if summary.error.code != DecodeOK || summary.iterations != 5 || summary.p50_ns != 20 || summary.p95_ns != 100 || summary.total_ns != 161 { return 1 }
+    bad: [1]s64 = .[-1]
+    if SummarizeTimings(bad[:]).error.code != InvalidInput || SummarizeTimings(samples[:0]).error.code != InvalidInput { return 2 }
+    overflow: [2]s64 = .[9223372036854775807, 1]
+    if SummarizeTimings(overflow[:]).error.code != InvalidInput { return 3 }
+    if HashText(cast(u64)0) != "0000000000000000" || HashText(cast(u64)18446744073709551615) != "ffffffffffffffff" { return 4 }
+    return 0
+}
+#program_export
+main :: () -> s32 { result := SelfTest(); if result != 0 { return result }; return NativeTest() }

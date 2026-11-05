@@ -1,0 +1,18 @@
+[package]
+name = "image-codec"
+module_roots = ["src"]
+
+[toolchain]
+git = "https://github.com/ziranlang/ziran.git"
+ref = "24c22d9f22225c4a339cac459958c89be7ceb5de"
+
+[exports]
+api = "src/api.zi"
+errors = "src/errors.zi"
+limits = "src/limits.zi"
+metadata = "src/metadata.zi"
+bytes = "src/bytes.zi"
+buffer = "src/buffer.zi"
+image = "src/image.zi"
+scheduler = "src/scheduler.zi"
+benchmark = "src/benchmark.zi"

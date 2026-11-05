@@ -1,0 +1,135 @@
+#import "image_codec/api"
+
+Metadata :: () -> ImageMetadata {
+    metadata: ImageMetadata
+    metadata.width = 2; metadata.height = 2
+    metadata.source_bit_depth = 8; metadata.has_alpha = true; metadata.frame_count = 1
+    return metadata
+}
+Invoke :: (provider: DecodeProcedure, bytes: BorrowedBytes, metadata: ImageMetadata, options: *DecodeOptions) -> DecodeResult {
+    return provider(bytes, metadata, options)
+}
+TakeResult :: (result: DecodeResult) -> s32 {
+    if !result.is_ok || !ImageValid(*result.image) { return 1 }
+    return cast(s32)result.image.pixels[15]
+}
+OwnedPlane :: () -> Plane {
+    plane: Plane
+    plane.width = 2; plane.height = 1; plane.stride = 2; plane.sample_bytes = 1
+    if !VecPush(plane.storage, cast(u8)10) || !VecPush(plane.storage, cast(u8)20) { empty: Plane; return empty }
+    return plane
+}
+TakePlane :: (plane: Plane) -> s32 { return cast(s32)plane.storage[0] + cast(s32)plane.storage[1] }
+ExactImageCapacity :: () -> bool {
+    metadata := Metadata(); metadata.width = 3
+    limits := DefaultLimits(); limits.max_output_bytes = 24
+    result := AllocateImage(metadata, limits, null)
+    if !result.is_ok || result.image.pixels.count != 24 || result.image.pixels.capacity != 24 { return false }
+    limits.max_output_bytes = 23
+    short := AllocateImage(metadata, limits, null)
+    return !short.is_ok && short.error.code == LimitExceeded && short.image.pixels.capacity == 0
+}
+#program_export
+SelfTest :: () -> s32 {
+    if !ExactImageCapacity() { return 35 }
+    limits := DefaultLimits()
+    if ValidateLimits(limits).code != DecodeOK { return 1 }
+    for field: 0..9 {
+        invalid := limits
+        if field == 0 { invalid.max_input_bytes = 0 }
+        if field == 1 { invalid.max_width = 0 }
+        if field == 2 { invalid.max_height = 0 }
+        if field == 3 { invalid.max_pixels = 0 }
+        if field == 4 { invalid.max_output_bytes = 0 }
+        if field == 5 { invalid.max_working_bytes = 0 }
+        if field == 6 { invalid.max_metadata_bytes = -1 }
+        if field == 7 { invalid.max_frames = 0 }
+        if field == 8 { invalid.max_workers = 0 }
+        if field == 9 { invalid.max_decoded_frames = 0 }
+        if ValidateLimits(invalid).code != InvalidLimits { return 2 }
+    }
+    if ValidateInputSize(0, limits).code != InvalidInput || ValidateInputSize(limits.max_input_bytes + 1, limits).code != LimitExceeded { return 3 }
+    if ValidateDimensions(-1, 2, limits).code != InvalidInput || ValidateDimensions(32769, 1, limits).code != LimitExceeded ||
+       ValidateDimensions(16384, 16384, limits).code != LimitExceeded { return 4 }
+    span, error := RequiredSpan(2, 2, 4, 12)
+    if span != 20 || error.code != DecodeOK { return 5 }
+    huge, overflow := RequiredSpan(2, 3, 4, 9223372036854775807)
+    if overflow.code != LimitExceeded || huge != 0 { return 6 }
+    bad_span, bad_stride := RequiredSpan(2, 2, 4, 7)
+    if bad_stride.code != InvalidInput { return 7 }
+    bytes: [17]u8
+    for i: 0..16 { bytes[i] = cast(u8)i }
+    input := BorrowBytes(bytes[:16])
+    part, part_error := ByteRange(input, 4, 4)
+    if part_error.code != DecodeOK || part.data.count != 4 || part.data[0] != 4 { return 8 }
+    missing, missing_error := ByteRange(input, 15, 9223372036854775807)
+    negative, negative_error := ByteRange(input, -1, 0)
+    if missing_error.code != TruncatedInput || missing_error.offset != 15 || missing.data.count != 0 || negative_error.code != InvalidInput { return 9 }
+    metadata := Metadata()
+    too_many := metadata; too_many.frame_count = limits.max_frames + 1
+    animated := metadata; animated.frame_count = 2
+    if ValidateMetadata(too_many, limits).code != LimitExceeded || ValidateMetadata(animated, limits).code != DecodeOK ||
+       ValidateDecodedFrames(2, limits).code != LimitExceeded { return 10 }
+    too_much := metadata; too_much.metadata_bytes = limits.max_metadata_bytes + 1
+    if ValidateMetadata(too_much, limits).code != LimitExceeded { return 11 }
+    invalid_meta := metadata; invalid_meta.source_bit_depth = -1
+    if ValidateMetadata(invalid_meta, limits).code != InvalidInput { return 12 }
+    storage: [24]u8
+    plane := PlaneView.{2, 2, 4, 2, storage[:]}
+    if ValidatePlane(plane, limits).code != DecodeOK { return 13 }
+    plane.sample_bytes = 3
+    if ValidatePlane(plane, limits).code != UnsupportedCapability { return 14 }
+    plane.sample_bytes = 2; plane.stride = 24
+    if ValidatePlane(plane, limits).code != OutputTooSmall { return 15 }
+    budget := NewWorkerBudget(limits)
+    token: Cancellation
+    if ValidateWorkerBudget(*budget, limits).code != DecodeOK || AcquireWorker(*budget, *token).code != DecodeOK { return 16 }
+    if AcquireWorker(*budget, *token).code != WorkerBudgetExceeded || budget.active_workers != 1 || budget.peak_workers != 1 { return 17 }
+    if ReserveWorkingBytes(*budget, limits.max_working_bytes, *token).code != DecodeOK ||
+       ReserveWorkingBytes(*budget, 1, *token).code != LimitExceeded ||
+       ReleaseWorkingBytes(*budget, limits.max_working_bytes + 1).code != InvalidInput { return 18 }
+    if ReleaseWorkingBytes(*budget, limits.max_working_bytes).code != DecodeOK || budget.working_bytes != 0 { return 19 }
+    if ReleaseWorker(*budget).code != DecodeOK || ReleaseWorker(*budget).code != InvalidInput { return 20 }
+    Cancel(*token)
+    if AcquireWorker(*budget, *token).code != DecodeCancelled || budget.active_workers != 0 ||
+       ReserveWorkingBytes(*budget, 1, *token).code != DecodeCancelled { return 21 }
+    cancelled := AllocateImage(metadata, limits, *token)
+    if cancelled.is_ok || cancelled.error.code != DecodeCancelled || cancelled.image.pixels.count != 0 { return 22 }
+    options := DefaultOptions(); options.workers = *budget
+    decoded := Invoke(DecodeRGBA8, input, metadata, *options)
+    if !decoded.is_ok || decoded.error.code != DecodeOK || !ImageValid(*decoded.image) || budget.active_workers != 0 { return 23 }
+    // Owned pixels survive input changes and can move through a result.
+    bytes[0] = 200
+    if decoded.image.pixels[0] != 0 { return 24 }
+    for i: 0..23 { storage[i] = 99 }
+    output := OutputBuffer.{storage[:20], 12}
+    if CopyImageToOutput(*decoded.image, output, limits, null).code != DecodeOK || storage[0] != 0 || storage[12] != 8 || storage[8] != 99 || storage[20] != 99 { return 25 }
+    too_short := OutputBuffer.{storage[:15], 8}
+    if CopyImageToOutput(*decoded.image, too_short, limits, null).code != OutputTooSmall { return 26 }
+    storage[0] = 99
+    if CopyImageToOutput(*decoded.image, output, limits, *token).code != DecodeCancelled || storage[0] != 99 { return 27 }
+    if TakeResult(decoded) != 15 { return 28 }
+    owned_plane := OwnedPlane()
+    if owned_plane.storage.count != 2 { return 34 }
+    if TakePlane(owned_plane) != 30 { return 34 }
+    short := DecodeRGBA8(BorrowBytes(bytes[:15]), metadata, *options)
+    trailing := DecodeRGBA8(BorrowBytes(bytes[:]), metadata, *options)
+    if short.is_ok || short.error.code != TruncatedInput || trailing.error.code != MalformedInput { return 29 }
+    options.color_mode = FastColor
+    unsupported := DecodeRGBA8(input, metadata, *options)
+    if unsupported.error.code != UnsupportedCapability { return 30 }
+    options.color_mode = StrictColor; options.cancellation = *token
+    stopped := DecodeRGBA8(input, metadata, *options)
+    if stopped.error.code != DecodeCancelled || budget.active_workers != 0 { return 31 }
+    for code: 0..12 { if ErrorText(cast(s32)code) == "unknown error" { return 32 } }
+    invalid_success := DecodeFailure(Error(DecodeOK))
+    if ErrorText(99) != "unknown error" || invalid_success.error.code != InvalidInput { return 33 }
+    return 0
+}
+#program_export
+main :: () -> s32 { return SelfTest() }
+#program_export
+AllocationFailure :: () -> s32 {
+    result := AllocateImage(Metadata(), DefaultLimits(), null)
+    return ifx !result.is_ok && result.error.code == AllocationFailed && result.image.pixels.count == 0 then 0 else 1
+}

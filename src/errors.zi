@@ -1,0 +1,33 @@
+// Zero is success. Error offsets are input byte offsets, or -1 if unknown.
+DecodeError :: struct { code: s32; offset: s64; }
+DecodeOK :: 0;
+InvalidLimits :: 1;
+InvalidInput :: 2;
+TruncatedInput :: 3;
+MalformedInput :: 4;
+UnsupportedCapability :: 5;
+LimitExceeded :: 6;
+OutputTooSmall :: 7;
+DecodeCancelled :: 8;
+AllocationFailed :: 9;
+WorkerBudgetExceeded :: 10;
+InputOutputFailed :: 11;
+CorrectnessMismatch :: 12;
+
+Error :: (code: s32, offset: s64 = -1) -> DecodeError { return DecodeError.{code, offset} }
+ErrorText :: (code: s32) -> string {
+    if code == DecodeOK { return "ok" }
+    if code == InvalidLimits { return "invalid limits" }
+    if code == InvalidInput { return "invalid input" }
+    if code == TruncatedInput { return "truncated input" }
+    if code == MalformedInput { return "malformed input" }
+    if code == UnsupportedCapability { return "unsupported capability" }
+    if code == LimitExceeded { return "limit exceeded" }
+    if code == OutputTooSmall { return "output too small" }
+    if code == DecodeCancelled { return "cancelled" }
+    if code == AllocationFailed { return "allocation failed" }
+    if code == WorkerBudgetExceeded { return "worker budget exceeded" }
+    if code == InputOutputFailed { return "input/output failed" }
+    if code == CorrectnessMismatch { return "correctness mismatch" }
+    return "unknown error"
+}
