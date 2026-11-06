@@ -8,7 +8,7 @@ export ZIRAN_DESKTOP_RECOVERY=0 HARMONY_DESKTOP_RECOVERY=0 YUE_DESKTOP_RECOVERY=
 root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 toolchain=${ZIRAN_ROOT:-$root/../../ziran}
 ziran=${ZIRAN:-$toolchain/build/bin/ziran}
-run_vm=${ZIRAN_VM:-$(dirname -- "$ziran")/zi2zx-vm}
+zi2zx=${ZIRAN_ZX:-$(dirname -- "$ziran")/zi2zx}
 mkdir -p "$root/build/scratch/tmp" "$root/build/bin" "$root/build/cache"
 export TMPDIR="$root/build/scratch/tmp" XDG_CACHE_HOME="$root/build/cache" ZIRAN_NATIVE_CACHE="$root/build/cache/native"
 export GOTOOLCHAIN=local GOMAXPROCS=2 GOFLAGS=-p=2

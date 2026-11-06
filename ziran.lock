@@ -8,8 +8,8 @@
     "name": "image-codec"
   },
   "toolchain": {
-    "commit": "24c22d9f22225c4a339cac459958c89be7ceb5de",
-    "ref": "24c22d9f22225c4a339cac459958c89be7ceb5de",
+    "commit": "5fe70de6960b2fb8f01164c6643687adfba94156",
+    "ref": "5fe70de6960b2fb8f01164c6643687adfba94156",
     "url": "https://github.com/ziranlang/ziran.git"
   }
 }

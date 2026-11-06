@@ -10,9 +10,9 @@ import subprocess
 root = Path(__file__).resolve().parents[1]
 toolchain = Path(os.environ.get("ZIRAN_ROOT", str(root / "../../ziran"))).resolve()
 bindir = Path(os.environ.get("ZIRAN", str(toolchain / "build/bin/ziran"))).parent
-binaries = {name: bindir / name for name in ("ziran", "zi2c", "zi2go", "zi2zx", "zi2zx-vm")}
-if "ZIRAN_VM" in os.environ:
-    binaries["zi2zx-vm"] = Path(os.environ["ZIRAN_VM"])
+binaries = {name: bindir / name for name in ("ziran", "zi2c", "zi2go", "zi2zx")}
+if "ZIRAN_ZX" in os.environ:
+    binaries["zi2zx"] = Path(os.environ["ZIRAN_ZX"])
 commands = ["sh tests/contracts.sh", "sh tests/corpus.sh --verify", "sh tests/benchmark_contract.sh", "sh tests/package_import.sh"]
 
 

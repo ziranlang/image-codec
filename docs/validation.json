@@ -1,9 +1,9 @@
 {
-  "snapshot_after_local_tests_utc": "2026-11-05T17:04:34.945657+00:00",
+  "snapshot_after_local_tests_utc": "2026-11-06T23:02:23.981191+00:00",
   "package_root": "/mnt/storage/Projects/ziranlang/packages/image-codec",
   "package_branch": "master",
   "package_commit": null,
-  "package_base_commit": "a8767d78d0c08d5b1c1fc0bab6fcafdc7a6da930",
+  "package_base_commit": "360553150917f352e49e1beb78917370792ccaef",
   "tracked_or_untracked_changes_present": true,
   "committed": false,
   "pushed": false,
@@ -30,16 +30,15 @@
   ],
   "generated_by": "build-queue -- sh tests/all.sh (tests/validation_receipt.py runs only after all suites pass)",
   "toolchain": {
-    "root": "/mnt/storage/Projects/ziranlang/ziran",
+    "root": "/home/wao/.cache/ziran/sources/p246d2e21b3e49c4f",
     "version": "ziran 0.3.1",
-    "head": "03e01d08d9f12a68693294a3bd12f6c758290e45",
+    "head": "5fe70de6960b2fb8f01164c6643687adfba94156",
     "tracked_sources_dirty": false,
     "binary_sha256": {
-      "ziran": "7412b9d41037d219cc386d1f6c54b93335d1b555de383b37321c9f571da9cd61",
-      "zi2c": "9b55d6da4748b689463a76cfe12e704b0492b2a41c813cdfea6b95bba4363a1c",
-      "zi2go": "f9d8347d208471e635e414e3538fd4f63698cdc53c331ae585d61e1c3867e035",
-      "zi2zx": "8e675caf3b59836287b7b92786a482555705aec33d7db7b43b300423f75ba19e",
-      "zi2zx-vm": "6f98c822f7710289c8ce4c2dd7ecf12eecb05d2edf916b5104c497c17b6a452a"
+      "ziran": "bbadea312849ad635c5bb76bec75ec1b6604a9bca688d21a7dc491d7b9dbe13e",
+      "zi2c": "338e26fb6d8ee1543d9a9cc67d08a1bb0834b80404d9571f3b1b9e4dd13c8183",
+      "zi2go": "416bab7278cf9633e6b7bc8f5ef887895703595f7d9b0db7dc47ca53ae457313",
+      "zi2zx": "6d92e1a07c18fee29205806d0757c7287860fc3f12cb437807f8bcdd0a723eeb"
     }
   },
   "source_sha256": {
@@ -61,15 +60,15 @@
     "tests/hash.py": "6b63963dc7c331bbf7b89b506f4c2a04f2e48a3cfb9fb63aba99c5e4336d2cf9",
     "tests/import_kryon_fixtures.py": "828dfda645648042bac030f73ba2d5e737ebd622236b2cb951aa997ed85fbcbd",
     "tests/import_local_fixtures.py": "fc35a581cfc8caff265e52e5383037d072e442f78ee1fd0114f01be280e3a1fd",
-    "tests/validation_receipt.py": "65c308b84f2648d53d8c508a53d1abcc56e6987fc5955377b1ad26fd68b0be8d",
-    "tests/all.sh": "a1cb758cb56ee50c7417951f8526bb1218ab6f30534d6e203e4090aa1859c2c7",
-    "tests/benchmark_contract.sh": "99bddf52ef51270ecce4d722b9f24c590fa185687a1cd73a3ee2d8e795f4abfc",
-    "tests/common.sh": "6de48078cdfda15a683ff2d28cd5d9c4b84fc88a2bad9e55f37b624decfa89fa",
-    "tests/contracts.sh": "c0001ddb1fc7e5c0ad5b873687df2d1f2d1d57ea329ba08f88a00ce2dfe55d41",
+    "tests/validation_receipt.py": "dd0ac98d56392e4f3544e6f0dace0ec9cb273b735bb393c769bd1f7593362a5e",
+    "tests/all.sh": "97c381b9d67d887b855ab978c166a2ac9fa09bbe286a8d16c324222ca3196c86",
+    "tests/benchmark_contract.sh": "950507adfb4b30ada73cafd0b293763e88fd57e4c94a18c1ab54a64c46a93445",
+    "tests/common.sh": "4730213396b224257a57ed52ac865cffdecaf6c96a7044ebc2c9c919eaf7e529",
+    "tests/contracts.sh": "b38666db970a85cf00175b290019c1dd7858e16ee4c4e7b8131e4a6aebe7d733",
     "tests/corpus.sh": "7a0c31e434171253dc66d827ea4d12f566036a1eb669b9f731251776514e9701",
-    "tests/package_import.sh": "80896176699a129b0e4345a832564e9465e5a92c9e5389bdc1a965173fb0d4a1",
+    "tests/package_import.sh": "4c730c7268b4fad33ef531fc5a6a3d1fc925aa1acf5fb167be8bc106d6e6b1bf",
     "docs/benchmark.schema.json": "0869cb153c90d03c9c9e6b1565d62b287318339c99e5ec70f756d42bd86c44e7",
-    "ziran.toml": "9ef653e3135da7abb43c73886180f778dc46e4f8f471d0e6f186f4ceae85677a"
+    "ziran.toml": "afbbaad5557aeb7348cb27d1c608e4ca904b9e8d2d3c1747b18a4efb137f599a"
   },
   "mandatory_manifest_sha256": "ca98a05abfffa09965479d88c8fd3669136192a1ea1d6cf2f5461bbc41cc348c",
   "toolchain_unchanged_across_suite": true

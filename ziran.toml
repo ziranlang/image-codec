@@ -4,7 +4,7 @@ module_roots = ["src"]
 
 [toolchain]
 git = "https://github.com/ziranlang/ziran.git"
-ref = "24c22d9f22225c4a339cac459958c89be7ceb5de"
+ref = "5fe70de6960b2fb8f01164c6643687adfba94156"
 
 [exports]
 api = "src/api.zi"
