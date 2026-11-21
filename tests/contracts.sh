@@ -8,10 +8,10 @@ mkdir -p "$out"
 "$ziran" ir --root tests --module-path "image_codec=$root/src" --module-path "std=$toolchain/std" -o "$out/ir" tests/contracts.zi
 "$ziran" bundle --root tests --module-path "image_codec=$root/src" --module-path "std=$toolchain/std" --entry contracts:SelfTest -o "$out/source.zx" tests/contracts.zi
 test "$("$ziran" run "$out/source.zx")" = 0
-test "$("$zi2zx" run --vm "$out/source.zx")" = 0
+test "$("$zi2zx" run --backend engine "$out/source.zx")" = 0
 "$ziran" bundle --root "$out/ir" --module-path "$out/ir" --entry contracts:SelfTest -o "$out/saved.zx" "$out/ir/contracts.zir"
 test "$("$ziran" run "$out/saved.zx")" = 0
-test "$("$zi2zx" run --vm "$out/saved.zx")" = 0
+test "$("$zi2zx" run --backend engine "$out/saved.zx")" = 0
 for form in source saved; do
     input="$root/tests/contracts.zi"
     set -- --root tests --module-path "image_codec=$root/src" --module-path "std=$toolchain/std"

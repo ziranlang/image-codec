@@ -13,7 +13,7 @@ for form in source saved; do
     if test "$form" = saved; then input="$out/ir/benchmark.zir"; set -- --root "$out/ir" --module-path "$out/ir"; fi
     "$ziran" bundle "$@" --entry benchmark:SelfTest -o "$out/$form.zx" "$input"
     test "$("$ziran" run "$out/$form.zx")" = 0
-    test "$("$zi2zx" run --vm "$out/$form.zx")" = 0
+    test "$("$zi2zx" run --backend engine "$out/$form.zx")" = 0
     "$ziran" build --target=c --exe --entry benchmark:main "$@" -o "$out/$form-native" "$input"
     "$out/$form-native/benchmark"
 done
